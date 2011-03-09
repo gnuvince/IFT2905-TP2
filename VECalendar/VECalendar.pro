@@ -11,8 +11,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    calendarevent.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    calendarevent.h
 
 FORMS    += mainwindow.ui

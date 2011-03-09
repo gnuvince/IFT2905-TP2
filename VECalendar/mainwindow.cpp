@@ -1,5 +1,10 @@
+#include <QDebug>
+#include <QIODevice>
+#include <QFile>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "calendarevent.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
