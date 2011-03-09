@@ -11,8 +11,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    addmoddialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    addmoddialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    addmoddialog.ui
