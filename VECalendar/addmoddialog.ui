@@ -80,7 +80,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="startTime"/>
+      <widget class="QTimeEdit" name="timeEdit_2"/>
      </item>
      <item>
       <widget class="QLabel" name="z_label_4">
@@ -90,7 +90,20 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="endTime"/>
+      <widget class="QTimeEdit" name="timeEdit"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
