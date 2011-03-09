@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "addmoddialog.h"
 
 #include <QDebug>
 
@@ -9,8 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    AddModDialog *AMDialog = new AddModDialog(this);
-    //AMDialog->setVisible(true);
+    AMDialog = new AddModDialog(this);
+    AMDialog->setVisible(true);
 
     connect(ui->addEventButton, SIGNAL(clicked()), this, SLOT(addEventRequest(QDate)));
     connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(dateActivated()));
@@ -21,12 +20,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dateActivated(); // XXX
 
-    delete AMDialog;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete AMDialog;
 }
 
 void MainWindow::HiliteDate()

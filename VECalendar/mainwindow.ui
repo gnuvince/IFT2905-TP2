@@ -20,7 +20,11 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QCalendarWidget" name="calendarWidget"/>
+         <widget class="QCalendarWidget" name="calendarWidget">
+          <property name="locale">
+           <locale language="French" country="France"/>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -39,8 +43,11 @@
           </item>
           <item>
            <widget class="QLabel" name="selectedDate">
+            <property name="locale">
+             <locale language="French" country="Canada"/>
+            </property>
             <property name="text">
-             <string>1er janvier 1970</string>
+             <string>date</string>
             </property>
            </widget>
           </item>

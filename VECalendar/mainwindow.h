@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDate>
+#include "addmoddialog.h"
 
 namespace Ui {
     class MainWindow;
@@ -28,6 +29,7 @@ signals:
 
 private:
     Ui::MainWindow *ui;
+    AddModDialog *AMDialog;
 };
 
 #endif // MAINWINDOW_H
