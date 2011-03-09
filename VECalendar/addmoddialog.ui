@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>504</width>
-    <height>373</height>
+    <width>487</width>
+    <height>542</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="z_horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -30,7 +30,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="eventDate">
        <property name="font">
         <font>
          <pointsize>14</pointsize>
@@ -42,7 +42,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2">
+      <spacer name="z_horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -59,52 +59,52 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="z_label_2">
        <property name="text">
         <string>Titre</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="eventTitle"/>
      </item>
     </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="z_label_3">
        <property name="text">
         <string>Heure</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_2"/>
+      <widget class="QLineEdit" name="startTime"/>
      </item>
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="z_label_4">
        <property name="text">
         <string>à</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_3"/>
+      <widget class="QLineEdit" name="endTime"/>
      </item>
     </layout>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="z_label_5">
        <property name="text">
         <string>Description</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="textEdit"/>
+      <widget class="QTextEdit" name="eventDescription"/>
      </item>
     </layout>
    </item>
