@@ -2,6 +2,7 @@
 #define ADDMODDIALOG_H
 
 #include <QDialog>
+#include <QDate>
 
 namespace Ui {
     class AddModDialog;
@@ -14,6 +15,11 @@ class AddModDialog : public QDialog
 public:
     explicit AddModDialog(QWidget *parent = 0);
     ~AddModDialog();
+    QDate *entryDate;
+
+
+public slots:
+    void addEventRequest(QDate &date);
 
 private:
     Ui::AddModDialog *ui;

@@ -20,12 +20,13 @@ public:
 public slots:
     void dateActivated();
     void HiliteDate();
-    void addEventRequest(QDate *date);
+    void addEventRequest();
     void deleteEventRequest();
     void modifyEventRequest();
 
 signals:
     void dateSelected(QString date);
+    void createEntry(QDate &date);
 
 private:
     Ui::MainWindow *ui;

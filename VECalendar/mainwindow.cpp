@@ -8,15 +8,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    AMDialog = new AddModDialog(this);
-    AMDialog->setVisible(true);
 
-    connect(ui->addEventButton, SIGNAL(clicked()), this, SLOT(addEventRequest(QDate)));
+    AMDialog = new AddModDialog(this);
+
+
+    connect(ui->addEventButton, SIGNAL(clicked()), this, SLOT(addEventRequest()));
+
     connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(dateActivated()));
 
     // Éventuellement, connecter calendarWidget avec calendrier et faire proxy pour filtrer.
 
+
     connect(this, SIGNAL(dateSelected(QString)), ui->selectedDate, SLOT(setText(QString)));
+    connect(this, SIGNAL(createEntry(QDate&)), AMDialog, SLOT(addEventRequest(QDate&)));
 
     dateActivated(); // XXX
 
@@ -33,10 +37,16 @@ void MainWindow::HiliteDate()
 
 }
 
-void MainWindow::addEventRequest(QDate *date)
+void MainWindow::addEventRequest()
 {
+    QDate date = ui->calendarWidget->selectedDate();
+    AMDialog->entryDate = &date;
 
+    QString str = date.toString("dd MMMM yyyy");
+    emit createEntry(date);
+    AMDialog->setVisible(true);
 }
+
 
 void MainWindow::deleteEventRequest()
 {
