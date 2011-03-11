@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 #include <QDate>
+#include <QtGui/QWidget>
+#include <QStackedLayout>
+#include <QHBoxLayout>
+
 #include "addmoddialog.h"
 
 namespace Ui {
@@ -23,14 +27,23 @@ public slots:
     void addEventRequest();
     void deleteEventRequest();
     void modifyEventRequest();
+    void ToggleView();
 
 signals:
     void dateSelected(QString date);
     void createEntry(QDate &date);
+    void selectView(int view);
 
 private:
+    int CALENDAR_VIEW;
+    int FILTER_VIEW;
     Ui::MainWindow *ui;
     AddModDialog *AMDialog;
+    QStackedLayout *stackedLayout;
+    QHBoxLayout *hBoxLayout;
+    QWidget *pane1Widget;
+    QWidget *pane2Widget;
+    int activeView;
 };
 
 #endif // MAINWINDOW_H
