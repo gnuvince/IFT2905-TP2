@@ -142,9 +142,9 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="addEventButton">
+               <widget class="QPushButton" name="modEventButton">
                 <property name="text">
-                 <string>Add</string>
+                 <string>Mod</string>
                 </property>
                </widget>
               </item>
@@ -156,9 +156,9 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="modEventButton">
+               <widget class="QPushButton" name="addEventButton">
                 <property name="text">
-                 <string>Mod</string>
+                 <string>Add</string>
                 </property>
                </widget>
               </item>

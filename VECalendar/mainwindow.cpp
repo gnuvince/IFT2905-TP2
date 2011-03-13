@@ -7,6 +7,7 @@
 #include "calendarevent.h"
 #include "calendar.h"
 #include "dayeventfilterproxy.h"
+#include "eventlistproxy.h"
 
 #include <QDebug>
 
@@ -21,6 +22,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     AMDialog = new AddModDialog(this);
+    calendar = new Calendar(this);
+    DayEventFilterProxy *dayProxy = new DayEventFilterProxy(this);
+    dayProxy->setDynamicSortFilter(true);
+    dayProxy->setSourceModel(calendar);
+
+    EventListProxy *listProxy = new EventListProxy(this);
+    listProxy->setDynamicSortFilter(true);
+    listProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    listProxy->setSourceModel(calendar);
+
+
 
     connect(ui->addEventButton, SIGNAL(clicked()), this, SLOT(addEventRequest()));
     connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(dateActivated()));
@@ -33,7 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(this, SIGNAL(dateSelected(QString)), ui->selectedDate, SLOT(setText(QString)));
     connect(this, SIGNAL(createEntry(QDate&)), AMDialog, SLOT(addEventRequest(QDate&)));
-    connect(ui->calendarWidget, SIGNAL(clicked(QDate)), proxy, SLOT(setFilterDate(QDate)));
+    connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
+    connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
 
     dateActivated(); // XXX
     emit selectView(0);
@@ -47,7 +60,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->calendarWidget->setDateTextFormat(QDate(2011,3,10), fmt);
     */
 
-    calendar = new Calendar(this);
     calendar->add_event(new CalendarEvent(tr("Foo1"),
                                           QDate(2011, 3, 10),
                                           QTime(12, 0),
@@ -64,13 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
                                           QTime(13, 0),
                                           tr("Bar3")));
 
-    DayEventFilterProxy *proxy = new DayEventFilterProxy(this);
-    proxy->setSourceModel(calendar);
-    proxy->setDynamicSortFilter(true);
-
-
-    ui->dayEventsLong->setModel(calendar);
-    ui->dayEventsShort->setModel(proxy);
+    ui->dayEventsLong->setModel(listProxy);
+    ui->dayEventsShort->setModel(dayProxy);
 
 
 }

@@ -15,13 +15,15 @@ SOURCES += main.cpp\
         addmoddialog.cpp \
         calendarevent.cpp \
     calendar.cpp \
-    dayeventfilterproxy.cpp
+    dayeventfilterproxy.cpp \
+    eventlistproxy.cpp
 
 HEADERS  += mainwindow.h \
          calendarevent.h \
          addmoddialog.h \
     calendar.h \
-    dayeventfilterproxy.h
+    dayeventfilterproxy.h \
+    eventlistproxy.h
 
 FORMS    += mainwindow.ui \
     addmoddialog.ui
