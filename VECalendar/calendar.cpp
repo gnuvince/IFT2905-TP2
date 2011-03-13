@@ -2,9 +2,13 @@
 #include "calendarevent.h"
 #include <QList>
 #include <QDebug>
+#include <QStringList>
+
+
+
 
 Calendar::Calendar(QObject *parent) :
-    QObject(parent)
+    QAbstractTableModel(parent)
 {
     events = new QList<CalendarEvent*>();
 }
@@ -19,6 +23,52 @@ CalendarEvent* Calendar::get_event(int i) {
 
 void Calendar::remove_event(int i) {
     events->removeAt(i);
+}
+
+int Calendar::count() {
+    return events->count();
+}
+
+
+
+QVariant Calendar::data(const QModelIndex &index, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (index.isValid()) {
+        CalendarEvent *event = events->at(index.row());
+        switch (index.column()) {
+        case TITLE_INDEX: return event->title;
+        case DATE_INDEX: return event->date;
+        case START_TIME_INDEX: return event->start_time.toString("HH:mm");
+        case END_TIME_INDEX: return event->end_time.toString("HH:mm");
+        case DESCRIPTION_INDEX: return event->description;
+        default: ;
+        }
+    }
+    return QVariant();
+}
+
+int Calendar::rowCount(const QModelIndex &parent) const {
+    return events->count();
+}
+
+int Calendar::columnCount(const QModelIndex &parent) const {
+    return NUMBER_OF_FIELDS;
+}
+
+QVariant Calendar::headerData(int section, Qt::Orientation orientation, int role) const {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch (section) {
+        case TITLE_INDEX: return trUtf8("Titre");
+        case DATE_INDEX: return trUtf8("Date");
+        case START_TIME_INDEX: return trUtf8("Début");
+        case END_TIME_INDEX: return trUtf8("Fin");
+        case DESCRIPTION_INDEX: return trUtf8("Description");
+        default: ;
+        }
+    }
+    return QVariant();
 }
 
 

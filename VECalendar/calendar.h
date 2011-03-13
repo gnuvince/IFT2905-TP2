@@ -3,9 +3,22 @@
 
 #include <QObject>
 #include <QList>
+#include <QAbstractTableModel>
+#include <QStringList>
+
 #include "calendarevent.h"
 
-class Calendar : public QObject
+
+#define NUMBER_OF_FIELDS    5
+
+#define TITLE_INDEX         0
+#define DATE_INDEX          1
+#define START_TIME_INDEX    2
+#define END_TIME_INDEX      3
+#define DESCRIPTION_INDEX   4
+
+
+class Calendar : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -13,6 +26,12 @@ public:
     void add_event(CalendarEvent *ce);
     void remove_event(int i);
     CalendarEvent* get_event(int i);
+    int count();
+
+    QVariant data(const QModelIndex &index, int role) const;
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 signals:
 

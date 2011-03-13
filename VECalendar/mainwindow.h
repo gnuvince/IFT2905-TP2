@@ -8,6 +8,7 @@
 #include <QHBoxLayout>
 
 #include "addmoddialog.h"
+#include "calendar.h"
 
 namespace Ui {
     class MainWindow;
@@ -28,6 +29,7 @@ public slots:
     void deleteEventRequest();
     void modifyEventRequest();
     void ToggleView();
+    void setViewButtonText(int view);
 
 signals:
     void dateSelected(QString date);
@@ -35,8 +37,8 @@ signals:
     void selectView(int view);
 
 private:
-    int CALENDAR_VIEW;
-    int FILTER_VIEW;
+    static int CALENDAR_VIEW;
+    static int FILTER_VIEW;
     Ui::MainWindow *ui;
     AddModDialog *AMDialog;
     QStackedLayout *stackedLayout;
@@ -44,6 +46,7 @@ private:
     QWidget *pane1Widget;
     QWidget *pane2Widget;
     int activeView;
+    Calendar *calendar;
 };
 
 #endif // MAINWINDOW_H
