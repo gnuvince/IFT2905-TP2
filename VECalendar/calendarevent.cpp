@@ -22,6 +22,7 @@ CalendarEvent::CalendarEvent(const QString &title,
 }
 
 
+
 QDataStream& operator>>(QDataStream &s, CalendarEvent &ce) {
     s >> ce.title;
     s >> ce.date;

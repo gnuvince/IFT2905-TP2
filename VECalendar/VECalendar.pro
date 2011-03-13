@@ -12,9 +12,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    calendarevent.cpp
+        addmoddialog.cpp \
+        calendarevent.cpp \
+    calendar.cpp
 
 HEADERS  += mainwindow.h \
-    calendarevent.h
+         calendarevent.h \
+         addmoddialog.h \
+    calendar.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    addmoddialog.ui
