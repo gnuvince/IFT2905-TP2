@@ -23,11 +23,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     AMDialog = new AddModDialog(this);
     calendar = new Calendar(this);
-    DayEventFilterProxy *dayProxy = new DayEventFilterProxy(this);
+    dayProxy = new DayEventFilterProxy(this);
     dayProxy->setDynamicSortFilter(true);
     dayProxy->setSourceModel(calendar);
 
-    EventListProxy *listProxy = new EventListProxy(this);
+    listProxy = new EventListProxy(this);
     listProxy->setDynamicSortFilter(true);
     listProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     listProxy->setSourceModel(calendar);
@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(createEntry(QDate&)), AMDialog, SLOT(addEventRequest(QDate&)));
     connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
     connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
+    connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
+    connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
+
 
     dateActivated(); // XXX
     emit selectView(0);
@@ -132,4 +135,8 @@ void MainWindow::setViewButtonText(int view) {
     case 1: ui->viewButton->setText(tr("Calendrier")); break;
     default: ;
     }
+}
+
+void MainWindow::viewEvent(QModelIndex index) {
+    ui->eventDetails->setHtml(calendar->get_description(index));
 }

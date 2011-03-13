@@ -6,9 +6,13 @@
 #include <QtGui/QWidget>
 #include <QStackedLayout>
 #include <QHBoxLayout>
+#include <QModelIndex>
 
 #include "addmoddialog.h"
 #include "calendar.h"
+#include "dayeventfilterproxy.h"
+#include "eventlistproxy.h"
+
 
 namespace Ui {
     class MainWindow;
@@ -28,6 +32,7 @@ public slots:
     void addEventRequest();
     void deleteEventRequest();
     void modifyEventRequest();
+    void viewEvent(QModelIndex index);
     void ToggleView();
     void setViewButtonText(int view);
 
@@ -47,6 +52,8 @@ private:
     QWidget *pane2Widget;
     int activeView;
     Calendar *calendar;
+    DayEventFilterProxy *dayProxy;
+    EventListProxy *listProxy;
 };
 
 #endif // MAINWINDOW_H

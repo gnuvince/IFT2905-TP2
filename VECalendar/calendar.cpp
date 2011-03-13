@@ -29,6 +29,10 @@ int Calendar::count() {
     return events->count();
 }
 
+QString Calendar::get_description(const QModelIndex &index) const {
+    int i = index.row();
+    return events->at(i)->description;
+}
 
 
 QVariant Calendar::data(const QModelIndex &index, int role) const {

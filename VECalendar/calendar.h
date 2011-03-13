@@ -27,6 +27,7 @@ public:
     void remove_event(int i);
     CalendarEvent* get_event(int i);
     int count();
+    QString get_description(const QModelIndex &index) const;
 
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex &parent) const;
