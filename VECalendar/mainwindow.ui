@@ -57,7 +57,7 @@
       <item>
        <widget class="QStackedWidget" name="leftPane">
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LeftToRight</enum>
         </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
@@ -337,7 +337,7 @@
      <x>0</x>
      <y>0</y>
      <width>928</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalendrier">
