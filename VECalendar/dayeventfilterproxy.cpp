@@ -30,3 +30,8 @@ bool DayEventFilterProxy::filterAcceptsColumn(int source_column, const QModelInd
 }
 
 
+QString DayEventFilterProxy::get_description(const QModelIndex index) const {
+    QModelIndex index2 = sourceModel()->index(index.row(), DESCRIPTION_INDEX);
+    index2 = mapToSource(index2);
+    return QString("Hello");
+}
