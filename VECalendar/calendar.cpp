@@ -18,8 +18,8 @@ void Calendar::add_event(CalendarEvent *ce) {
     emit event_added(ce->date);
 }
 
-CalendarEvent* Calendar::get_event(int i) {
-    return events->at(i);
+CalendarEvent* Calendar::get_event(const QModelIndex &index) const {
+    return events->at(index.row());
 }
 
 void Calendar::remove_event(int i) {

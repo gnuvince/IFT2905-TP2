@@ -49,20 +49,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
     connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
     connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
-
     connect(calendar, SIGNAL(event_added(const QDate&)), this, SLOT(highlight_date(const QDate&)));
 
     dateActivated(); // XXX
     emit selectView(0);
 
     activeView = CALENDAR_VIEW;
-
-    /* Pour mettre un élément en gras/sous-ligné
-    QTextCharFormat fmt;
-    fmt.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-    fmt.setFontWeight(QFont::Bold);
-    ui->calendarWidget->setDateTextFormat(QDate(2011,3,10), fmt);
-    */
 
     calendar->add_event(new CalendarEvent(tr("Foo1"),
                                           QDate(2011, 3, 10),
@@ -143,5 +135,14 @@ void MainWindow::setViewButtonText(int view) {
 }
 
 void MainWindow::viewEvent(QModelIndex index) {
-    ui->eventDetails->setHtml(calendar->get_description(index));
+    //ui->eventDetails->setHtml(calendar->get_description(index));
+    QString description;
+    if (activeView == CALENDAR_VIEW) {
+        description = dayProxy->get_description(index);
+    }
+    else {
+        description = listProxy->get_description(index);
+    }
+
+    emit ui->eventDetails->setHtml(description);
 }

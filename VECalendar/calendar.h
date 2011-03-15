@@ -25,7 +25,7 @@ public:
     explicit Calendar(QObject *parent = 0);
     void add_event(CalendarEvent *ce);
     void remove_event(int i);
-    CalendarEvent* get_event(int i);
+    CalendarEvent* get_event(const QModelIndex &index) const;
     int count();
     QString get_description(const QModelIndex &index) const;
 

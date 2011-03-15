@@ -15,3 +15,7 @@ bool EventListProxy::filterAcceptsColumn(int source_column, const QModelIndex &s
             source_column == DATE_INDEX;
 }
 
+
+QString EventListProxy::get_description(const QModelIndex index) const {
+    return (static_cast<Calendar*>(sourceModel()))->get_description(mapToSource(index));
+}
