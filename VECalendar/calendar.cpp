@@ -15,6 +15,7 @@ Calendar::Calendar(QObject *parent) :
 
 void Calendar::add_event(CalendarEvent *ce) {
     events->append(ce);
+    emit event_added(ce->date);
 }
 
 CalendarEvent* Calendar::get_event(int i) {

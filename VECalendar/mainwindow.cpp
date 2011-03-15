@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
     connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
 
+    connect(calendar, SIGNAL(event_added(const QDate&)), this, SLOT(highlight_date(const QDate&)));
 
     dateActivated(); // XXX
     emit selectView(0);
@@ -90,8 +91,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::HiliteDate()
-{
+void MainWindow::highlight_date(const QDate& date) {
+    QTextCharFormat fmt;
+    fmt.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+    fmt.setFontWeight(QFont::Bold);
+    fmt.setBackground(Qt::yellow);
+    ui->calendarWidget->setDateTextFormat(date, fmt);
 }
 
 void MainWindow::ToggleView()

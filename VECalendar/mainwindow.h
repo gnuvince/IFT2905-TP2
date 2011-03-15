@@ -28,13 +28,13 @@ public:
 
 public slots:
     void dateActivated();
-    void HiliteDate();
     void addEventRequest();
     void deleteEventRequest();
     void modifyEventRequest();
     void viewEvent(QModelIndex index);
     void ToggleView();
     void setViewButtonText(int view);
+    void highlight_date(const QDate &date);
 
 signals:
     void dateSelected(QString date);

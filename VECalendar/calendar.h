@@ -35,6 +35,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 signals:
+    void event_added(const QDate &date);
 
 public slots:
 
