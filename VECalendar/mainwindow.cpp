@@ -32,17 +32,11 @@ MainWindow::MainWindow(QWidget *parent) :
     listProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     listProxy->setSourceModel(calendar);
 
-
-
     connect(ui->addEventButton, SIGNAL(clicked()), this, SLOT(addEventRequest()));
     connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(dateActivated()));
     connect(ui->viewButton, SIGNAL(clicked()), this, SLOT(ToggleView()));
     connect(this, SIGNAL(selectView(int)), ui->leftPane, SLOT(setCurrentIndex(int)));
     connect(this, SIGNAL(selectView(int)), this, SLOT(setViewButtonText(int)));
-
-
-    // Éventuellement, connecter calendarWidget avec calendrier et faire proxy pour filtrer.
-
     connect(this, SIGNAL(dateSelected(QString)), ui->selectedDate, SLOT(setText(QString)));
     connect(this, SIGNAL(createEntry(QDate&)), AMDialog, SLOT(addEventRequest(QDate&)));
     connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
@@ -50,8 +44,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
     connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
     connect(calendar, SIGNAL(event_added(const QDate&)), this, SLOT(highlight_date(const QDate&)));
+    connect(calendar, SIGNAL(event_added(const QDate&)), dayProxy, SLOT(invalidate()));
+    connect(calendar, SIGNAL(event_added(const QDate&)), listProxy, SLOT(invalidate()));
 
-    dateActivated(); // XXX
+
+    dateActivated();
     emit selectView(0);
 
     activeView = CALENDAR_VIEW;
@@ -74,8 +71,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->dayEventsLong->setModel(listProxy);
     ui->dayEventsShort->setModel(dayProxy);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -99,12 +94,19 @@ void MainWindow::ToggleView()
 
 void MainWindow::addEventRequest()
 {
+    /*
     QDate date = ui->calendarWidget->selectedDate();
     AMDialog->entryDate = &date;
 
     QString str = date.toString("dd MMMM yyyy");
     emit createEntry(date);
     AMDialog->setVisible(true);
+    */
+    calendar->add_event(new CalendarEvent(tr("Foo4"),
+                                          QDate(2011, 3, 16),
+                                          QTime(12, 0),
+                                          QTime(13, 0),
+                                          tr("Bar4")));
 }
 
 
@@ -128,8 +130,8 @@ void MainWindow::dateActivated()
 
 void MainWindow::setViewButtonText(int view) {
     switch (view) {
-    case 0: ui->viewButton->setText(tr("Liste")); break;
-    case 1: ui->viewButton->setText(tr("Calendrier")); break;
+    case 0: ui->viewButton->setText(tr("Liste >>")); break;
+    case 1: ui->viewButton->setText(tr("<< Calendrier")); break;
     default: ;
     }
 }
@@ -143,6 +145,5 @@ void MainWindow::viewEvent(QModelIndex index) {
     else {
         description = listProxy->get_description(index);
     }
-
-    emit ui->eventDetails->setHtml(description);
+    ui->eventDetails->setHtml(description);
 }

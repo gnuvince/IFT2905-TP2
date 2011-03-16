@@ -20,10 +20,12 @@ bool DayEventFilterProxy::filterAcceptsRow(int source_row, const QModelIndex &so
 }
 
 int DayEventFilterProxy::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return 3;
 }
 
 bool DayEventFilterProxy::filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const {
+    Q_UNUSED(source_parent);
     return source_column == TITLE_INDEX ||
            source_column == START_TIME_INDEX ||
            source_column == END_TIME_INDEX;

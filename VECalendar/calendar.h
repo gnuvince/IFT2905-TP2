@@ -34,6 +34,7 @@ public:
     int columnCount(const QModelIndex &parent) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
+
 signals:
     void event_added(const QDate &date);
 
