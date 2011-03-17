@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
     connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
     connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
+    connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(setDateLabel(QModelIndex)));
     connect(calendar, SIGNAL(event_added(const QDate&)), this, SLOT(highlight_date(const QDate&)));
     connect(calendar, SIGNAL(event_added(const QDate&)), dayProxy, SLOT(invalidate()));
     connect(calendar, SIGNAL(event_added(const QDate&)), listProxy, SLOT(invalidate()));
@@ -80,9 +81,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::highlight_date(const QDate& date) {
     QTextCharFormat fmt;
-    fmt.setUnderlineStyle(QTextCharFormat::SingleUnderline);
     fmt.setFontWeight(QFont::Bold);
-    fmt.setBackground(Qt::yellow);
+    fmt.setForeground(Qt::white);
+    fmt.setBackground(QColor(0xEB, 0x6E, 0x10));
     ui->calendarWidget->setDateTextFormat(date, fmt);
 }
 
@@ -106,7 +107,7 @@ void MainWindow::addEventRequest()
                                           QDate(2011, 3, 16),
                                           QTime(12, 0),
                                           QTime(13, 0),
-                                          tr("Bar4")));
+                                          tr("<h1>Bar4</h1><u>Hihih</u>")));
 }
 
 
@@ -146,4 +147,10 @@ void MainWindow::viewEvent(QModelIndex index) {
         description = listProxy->get_description(index);
     }
     ui->eventDetails->setHtml(description);
+}
+
+void MainWindow::setDateLabel(QModelIndex index) {
+    QModelIndex index2 = listProxy->index(index.row(), 1);
+    QDate date = listProxy->data(index2).toDate();
+    ui->list_date_label->setText(date.toString("dd MMMM yyyy"));
 }

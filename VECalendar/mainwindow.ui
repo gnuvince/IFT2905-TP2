@@ -63,7 +63,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="page_1">
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -148,23 +148,38 @@
                </spacer>
               </item>
               <item>
+               <widget class="QPushButton" name="addEventButton">
+                <property name="text">
+                 <string>Ajouter</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="icons.qrc">
+                  <normaloff>:/icons/calendar_add.png</normaloff>:/icons/calendar_add.png</iconset>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QPushButton" name="modEventButton">
                 <property name="text">
-                 <string>Mod</string>
+                 <string>Modifier</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="icons.qrc">
+                  <normaloff>:/icons/calendar_edit.png</normaloff>:/icons/calendar_edit.png</iconset>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="delEventButton">
                 <property name="text">
-                 <string>Del</string>
+                 <string>Supprimer</string>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="addEventButton">
-                <property name="text">
-                 <string>Add</string>
+                <property name="icon">
+                 <iconset resource="icons.qrc">
+                  <normaloff>:/icons/calendar_delete.png</normaloff>:/icons/calendar_delete.png</iconset>
                 </property>
                </widget>
               </item>
@@ -211,9 +226,9 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="label">
+               <widget class="QLabel" name="list_date_label">
                 <property name="text">
-                 <string>Date</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -233,7 +248,11 @@
               <item>
                <widget class="QPushButton" name="addEventButton_2">
                 <property name="text">
-                 <string>+</string>
+                 <string>Ajouter</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="icons.qrc">
+                  <normaloff>:/icons/calendar_add.png</normaloff>:/icons/calendar_add.png</iconset>
                 </property>
                </widget>
               </item>
@@ -265,16 +284,24 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_2">
+               <widget class="QPushButton" name="pushButton_3">
                 <property name="text">
-                 <string>-</string>
+                 <string>Modifier</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="icons.qrc">
+                  <normaloff>:/icons/calendar_edit.png</normaloff>:/icons/calendar_edit.png</iconset>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_3">
+               <widget class="QPushButton" name="pushButton_2">
                 <property name="text">
-                 <string>Mod</string>
+                 <string>Supprimer</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="icons.qrc">
+                  <normaloff>:/icons/calendar_delete.png</normaloff>:/icons/calendar_delete.png</iconset>
                 </property>
                </widget>
               </item>
@@ -359,17 +386,11 @@
    <addaction name="menuFichier"/>
    <addaction name="menuEdition"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

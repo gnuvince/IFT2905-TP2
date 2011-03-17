@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>calendar_edit.png</file>
+    <file>calendar_delete.png</file>
+    <file>calendar_add.png</file>
+  </qresource>
+</RCC>
