@@ -144,5 +144,5 @@ void MainWindow::viewEvent(QModelIndex index) {
         description = listProxy->get_description(index);
     }
 
-    emit ui->eventDetails->setHtml(description);
+    ui->eventDetails->setHtml(description);
 }
