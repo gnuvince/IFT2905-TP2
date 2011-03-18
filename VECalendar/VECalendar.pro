@@ -9,6 +9,7 @@ QT       += core gui
 TARGET = VECalendar
 TEMPLATE = app
 
+RESOURCES     = icons.qrc
 
 SOURCES += main.cpp\
         mainwindow.cpp \

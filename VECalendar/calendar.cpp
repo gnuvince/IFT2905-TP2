@@ -55,10 +55,12 @@ QVariant Calendar::data(const QModelIndex &index, int role) const {
 }
 
 int Calendar::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return events->count();
 }
 
 int Calendar::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent)
     return NUMBER_OF_FIELDS;
 }
 

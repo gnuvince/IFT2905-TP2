@@ -9,6 +9,7 @@ EventListProxy::EventListProxy(QObject *parent) :
 }
 
 bool EventListProxy::filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const {
+    Q_UNUSED(source_parent);
     return source_column == TITLE_INDEX ||
             source_column == START_TIME_INDEX ||
             source_column == END_TIME_INDEX ||

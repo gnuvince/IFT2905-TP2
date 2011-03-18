@@ -35,6 +35,7 @@ public slots:
     void ToggleView();
     void setViewButtonText(int view);
     void highlight_date(const QDate &date);
+    void setDateLabel(QModelIndex index);
 
 signals:
     void dateSelected(QString date);
