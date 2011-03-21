@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QIODevice>
 #include <QFile>
+#include <QLocale>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -11,13 +12,15 @@
 
 #include <QDebug>
 
+
 int MainWindow::CALENDAR_VIEW = 0;
 int MainWindow::FILTER_VIEW = 1;
 
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    francais(QLocale::French, QLocale::Canada)
 {
     ui->setupUi(this);
 
@@ -125,8 +128,8 @@ void MainWindow::modifyEventRequest()
 void MainWindow::dateActivated()
 {
     QDate date = ui->calendarWidget->selectedDate();
-    QString str = date.toString("dd MMMM yyyy");
-    emit dateSelected(str);
+    QString frDate = francais.toString(date, "dd MMMM yyyy");
+    emit dateSelected(frDate);
 }
 
 void MainWindow::setViewButtonText(int view) {
@@ -152,5 +155,7 @@ void MainWindow::viewEvent(QModelIndex index) {
 void MainWindow::setDateLabel(QModelIndex index) {
     QModelIndex index2 = listProxy->index(index.row(), 1);
     QDate date = listProxy->data(index2).toDate();
-    ui->list_date_label->setText(date.toString("dd MMMM yyyy"));
+    QString frDate = francais.toString(date, "dd MMMM yyyy");
+
+    ui->list_date_label->setText(frDate);
 }

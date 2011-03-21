@@ -352,7 +352,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="eventDetails"/>
+       <widget class="QTextEdit" name="eventDetails">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

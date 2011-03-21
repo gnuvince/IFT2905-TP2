@@ -7,6 +7,7 @@
 #include <QStackedLayout>
 #include <QHBoxLayout>
 #include <QModelIndex>
+#include <QLocale>
 
 #include "addmoddialog.h"
 #include "calendar.h"
@@ -55,6 +56,8 @@ private:
     Calendar *calendar;
     DayEventFilterProxy *dayProxy;
     EventListProxy *listProxy;
+    QLocale francais;
+
 };
 
 #endif // MAINWINDOW_H
