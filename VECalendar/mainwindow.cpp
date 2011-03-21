@@ -47,10 +47,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(calendar, SIGNAL(event_added(const QDate&)), this, SLOT(highlight_date(const QDate&)));
     connect(calendar, SIGNAL(event_added(const QDate&)), dayProxy, SLOT(invalidate()));
     connect(calendar, SIGNAL(event_added(const QDate&)), listProxy, SLOT(invalidate()));
+    connect(ui->dayEventsShort, SIGNAL(activated(QModelIndex)), this, SLOT(enableButtons()));
+    connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(disableButtons()));
+    connect(ui->delEventButton, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
+    connect(ui->delEventButtonList, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
 
 
     dateActivated();
+    setEnabledButtons(false);
     emit selectView(0);
+
 
     activeView = CALENDAR_VIEW;
 
@@ -116,13 +122,28 @@ void MainWindow::addEventRequest()
 }
 
 
-void MainWindow::deleteEventRequest()
-{
+void MainWindow::deleteEventRequest() {
+    QTableView *view;
+    QSortFilterProxyModel *proxy;
 
+    if (activeView == CALENDAR_VIEW) {
+        view = ui->dayEventsShort;
+        proxy = dayProxy;
+    }
+    else {
+        view = ui->dayEventsLong;
+        proxy = listProxy;
+    }
+
+    QModelIndex index = view->currentIndex();
+    QModelIndex index2 = proxy->mapToSource(index);
+    int row = index2.row();
+    calendar->removeRow(row, index2);
+    ui->eventDetails->clear();
+    emit dataModelChanged();
 }
 
-void MainWindow::modifyEventRequest()
-{
+void MainWindow::modifyEventRequest() {
 
 }
 
@@ -158,4 +179,18 @@ void MainWindow::setDateLabel(QModelIndex index) {
     QModelIndex index2 = listProxy->index(index.row(), 1);
     QDate date = listProxy->data(index2).toDate();
     ui->list_date_label->setText(date.toString("dd MMMM yyyy"));
+}
+
+void MainWindow::setEnabledButtons(bool b) {
+    ui->delEventButton->setEnabled(b);
+    ui->modEventButton->setEnabled(b);
+}
+
+void MainWindow::enableButtons() {
+    setEnabledButtons(true);
+}
+
+
+void MainWindow::disableButtons() {
+    setEnabledButtons(false);
 }

@@ -36,11 +36,14 @@ public slots:
     void setViewButtonText(int view);
     void highlight_date(const QDate &date);
     void setDateLabel(QModelIndex index);
+    void disableButtons();
+    void enableButtons();
 
 signals:
     void dateSelected(QString date);
     void createEvent(CalendarEvent *event);
     void selectView(int view);
+    void dataModelChanged();
 
 private:
     static int CALENDAR_VIEW;
@@ -56,6 +59,8 @@ private:
     Calendar *calendar;
     DayEventFilterProxy *dayProxy;
     EventListProxy *listProxy;
+
+    void setEnabledButtons(bool b);
 };
 
 #endif // MAINWINDOW_H

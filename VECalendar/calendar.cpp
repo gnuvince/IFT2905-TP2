@@ -79,6 +79,17 @@ QVariant Calendar::headerData(int section, Qt::Orientation orientation, int role
 }
 
 
+bool Calendar::removeRows(int row, int count, const QModelIndex &parent) {
+    Q_UNUSED(parent);
+
+    beginRemoveRows(QModelIndex(), row, row+count-1);
+    for (int i = row; i < row+count; ++i)
+        remove_event(i);
+    endRemoveRows();
+    return true;
+}
+
+
 QDataStream& operator>>(QDataStream &s, Calendar &c) {
     quint32 count;
     s >> count;
