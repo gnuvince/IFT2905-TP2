@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(selectView(int)), ui->leftPane, SLOT(setCurrentIndex(int)));
     connect(this, SIGNAL(selectView(int)), this, SLOT(setViewButtonText(int)));
     connect(this, SIGNAL(dateSelected(QString)), ui->selectedDate, SLOT(setText(QString)));
-    connect(this, SIGNAL(createEntry(QDate&)), AMDialog, SLOT(addEventRequest(QDate&)));
+    connect(this, SIGNAL(createEvent(CalendarEvent*)), AMDialog, SLOT(addEventRequest(CalendarEvent*)));
     connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
     connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
     connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
@@ -103,6 +103,11 @@ void MainWindow::addEventRequest()
     emit createEntry(date);
     AMDialog->setVisible(true);
     */
+    emit createEvent(new CalendarEvent(tr(""),
+                                       ui->calendarWidget->selectedDate(),
+                                       QTime(12, 0),
+                                       QTime(13, 0),
+                                       tr("")));
     calendar->add_event(new CalendarEvent(tr("Foo4"),
                                           QDate(2011, 3, 16),
                                           QTime(12, 0),
@@ -124,8 +129,8 @@ void MainWindow::modifyEventRequest()
 
 void MainWindow::dateActivated()
 {
-    QDate date = ui->calendarWidget->selectedDate();
-    QString str = date.toString("dd MMMM yyyy");
+    activeDate = ui->calendarWidget->selectedDate();
+    QString str = activeDate.toString("dd MMMM yyyy");
     emit dateSelected(str);
 }
 

@@ -80,7 +80,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QTimeEdit" name="timeEdit_2"/>
+      <widget class="QTimeEdit" name="eventStartTime"/>
      </item>
      <item>
       <widget class="QLabel" name="z_label_4">
@@ -90,7 +90,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QTimeEdit" name="timeEdit"/>
+      <widget class="QTimeEdit" name="eventEndTime"/>
      </item>
      <item>
       <spacer name="horizontalSpacer_2">

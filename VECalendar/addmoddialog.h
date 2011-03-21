@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDate>
+#include "calendarevent.h"
 
 namespace Ui {
     class AddModDialog;
@@ -15,14 +16,21 @@ class AddModDialog : public QDialog
 public:
     explicit AddModDialog(QWidget *parent = 0);
     ~AddModDialog();
-    QDate *entryDate;
-
 
 public slots:
-    void addEventRequest(QDate &date);
+    void addEventRequest(CalendarEvent *ce);
+
+signals:
+    void eventCreated(CalendarEvent *ce);
+    void titleSelected(QString title);
+    void dateSelected(QString date);
+    void startTimeSelected(QTime startTime);
+    void endTimeSelected(QTime endTime);
+    void descriptionSelected(QString description);
 
 private:
     Ui::AddModDialog *ui;
+    CalendarEvent calEvent;
 };
 
 #endif // ADDMODDIALOG_H

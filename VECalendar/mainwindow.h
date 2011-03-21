@@ -39,7 +39,7 @@ public slots:
 
 signals:
     void dateSelected(QString date);
-    void createEntry(QDate &date);
+    void createEvent(CalendarEvent *event);
     void selectView(int view);
 
 private:
@@ -51,6 +51,7 @@ private:
     QHBoxLayout *hBoxLayout;
     QWidget *pane1Widget;
     QWidget *pane2Widget;
+    QDate activeDate;
     int activeView;
     Calendar *calendar;
     DayEventFilterProxy *dayProxy;
