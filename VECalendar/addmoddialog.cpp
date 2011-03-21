@@ -14,6 +14,7 @@ AddModDialog::AddModDialog(QWidget *parent) :
     connect(this, SIGNAL(startTimeSelected(QTime)), ui->eventStartTime, SLOT(setTime(QTime)));
     connect(this, SIGNAL(endTimeSelected(QTime)), ui->eventEndTime, SLOT(setTime(QTime)));
     connect(this, SIGNAL(descriptionSelected(QString)), ui->eventDescription, SLOT(setText(QString)));
+    //connect(ui->buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
 }
 
 AddModDialog::~AddModDialog()

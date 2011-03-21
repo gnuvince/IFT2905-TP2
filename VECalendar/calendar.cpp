@@ -89,6 +89,49 @@ bool Calendar::removeRows(int row, int count, const QModelIndex &parent) {
     return true;
 }
 
+bool Calendar::insertRows(int row, int count, const QModelIndex &parent) {
+
+    Q_UNUSED(parent);
+
+    beginInsertRows(QModelIndex(), row, row+count-1);
+    for (int i = row; i < row+count; ++i) {
+        CalendarEvent *ce = new CalendarEvent(QString(), QDate(), QTime(), QTime(), QString());
+        add_event(ce);
+    }
+    endInsertRows();
+    return true;
+}
+
+bool Calendar::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if (index.isValid() && role == Qt::EditRole) {
+         CalendarEvent *ce = get_event(index);
+
+         switch (index.column()) {
+         case TITLE_INDEX:
+             ce->title = value.toString();
+             break;
+         case DATE_INDEX:
+             ce->date = value.toDate();
+             break;
+         case START_TIME_INDEX:
+             ce->start_time = value.toTime();
+             break;
+         case END_TIME_INDEX:
+             ce->end_time = value.toTime();
+             break;
+         case DESCRIPTION_INDEX:
+             ce->description = value.toString();
+             break;
+         default: ;
+         }
+
+         emit(dataChanged(index, index));
+
+         return true;
+     }
+     return false;
+}
+
 
 QDataStream& operator>>(QDataStream &s, Calendar &c) {
     quint32 count;
