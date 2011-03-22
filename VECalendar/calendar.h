@@ -33,7 +33,9 @@ public:
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-
+    bool removeRows(int row, int count, const QModelIndex &parent);
+    bool insertRows(int row, int count, const QModelIndex &parent);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
 signals:
     void event_added(const QDate &date);

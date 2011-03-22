@@ -2,6 +2,7 @@
 #include <QIODevice>
 #include <QFile>
 #include <QLocale>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -24,8 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    AMDialog = new AddModDialog(this);
     calendar = new Calendar(this);
+    AMDialog = new AddModDialog(calendar, this);
     dayProxy = new DayEventFilterProxy(this);
     dayProxy->setDynamicSortFilter(true);
     dayProxy->setSourceModel(calendar);
@@ -41,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(selectView(int)), ui->leftPane, SLOT(setCurrentIndex(int)));
     connect(this, SIGNAL(selectView(int)), this, SLOT(setViewButtonText(int)));
     connect(this, SIGNAL(dateSelected(QString)), ui->selectedDate, SLOT(setText(QString)));
-    connect(this, SIGNAL(createEvent(CalendarEvent*)), AMDialog, SLOT(addEventRequest(CalendarEvent*)));
+    connect(this, SIGNAL(createEvent()), AMDialog, SLOT(exec()));
     connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
     connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
     connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
@@ -50,28 +51,19 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(calendar, SIGNAL(event_added(const QDate&)), this, SLOT(highlight_date(const QDate&)));
     connect(calendar, SIGNAL(event_added(const QDate&)), dayProxy, SLOT(invalidate()));
     connect(calendar, SIGNAL(event_added(const QDate&)), listProxy, SLOT(invalidate()));
+    connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(enableButtons()));
+    connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(disableButtons()));
+    connect(ui->delEventButton, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
+    connect(ui->delEventButtonList, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
+    connect(ui->calendarWidget, SIGNAL(clicked(QDate)), AMDialog, SLOT(setDate(QDate)));dateA
 
 
     dateActivated();
+    setEnabledButtons(false);
     emit selectView(0);
 
-    activeView = CALENDAR_VIEW;
 
-    calendar->add_event(new CalendarEvent(tr("Foo1"),
-                                          QDate(2011, 3, 10),
-                                          QTime(12, 0),
-                                          QTime(13, 0),
-                                          tr("Bar1")));
-    calendar->add_event(new CalendarEvent(tr("Foo2"),
-                                          QDate(2011, 3, 11),
-                                          QTime(12, 0),
-                                          QTime(13, 0),
-                                          tr("Bar2")));
-    calendar->add_event(new CalendarEvent(tr("Foo3"),
-                                          QDate(2011, 3, 10),
-                                          QTime(12, 0),
-                                          QTime(13, 0),
-                                          tr("Bar3")));
+    activeView = CALENDAR_VIEW;
 
     ui->dayEventsLong->setModel(listProxy);
     ui->dayEventsShort->setModel(dayProxy);
@@ -98,34 +90,38 @@ void MainWindow::ToggleView()
 
 void MainWindow::addEventRequest()
 {
-    /*
-    QDate date = ui->calendarWidget->selectedDate();
-    AMDialog->entryDate = &date;
-
-    QString str = date.toString("dd MMMM yyyy");
-    emit createEntry(date);
-    AMDialog->setVisible(true);
-    */
-    emit createEvent(new CalendarEvent(tr(""),
-                                       ui->calendarWidget->selectedDate(),
-                                       QTime(12, 0),
-                                       QTime(13, 0),
-                                       tr("")));
-    calendar->add_event(new CalendarEvent(tr("Foo4"),
-                                          QDate(2011, 3, 16),
-                                          QTime(12, 0),
-                                          QTime(13, 0),
-                                          tr("<h1>Bar4</h1><u>Hihih</u>")));
+    emit createEvent();
 }
 
 
-void MainWindow::deleteEventRequest()
-{
+void MainWindow::deleteEventRequest() {
+    if (QMessageBox::warning(this, trUtf8("Confirmation"),
+                             trUtf8("Voulez-vous vraiment supprimer cet événement?"),
+                             QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
+        return;
+    }
 
+    QTableView *view;
+    QSortFilterProxyModel *proxy;
+
+    if (activeView == CALENDAR_VIEW) {
+        view = ui->dayEventsShort;
+        proxy = dayProxy;
+    }
+    else {
+        view = ui->dayEventsLong;
+        proxy = listProxy;
+    }
+
+    QModelIndex index = view->currentIndex();
+    QModelIndex index2 = proxy->mapToSource(index);
+    int row = index2.row();
+    calendar->removeRow(row, index2);
+    ui->eventDetails->clear();
+    emit dataModelChanged();
 }
 
-void MainWindow::modifyEventRequest()
-{
+void MainWindow::modifyEventRequest() {
 
 }
 
@@ -163,4 +159,18 @@ void MainWindow::setDateLabel(QModelIndex index) {
     QString frDate = francais.toString(date, "dd MMMM yyyy");
 
     ui->list_date_label->setText(frDate);
+}
+
+void MainWindow::setEnabledButtons(bool b) {
+    ui->delEventButton->setEnabled(b);
+    ui->modEventButton->setEnabled(b);
+}
+
+void MainWindow::enableButtons() {
+    setEnabledButtons(true);
+}
+
+
+void MainWindow::disableButtons() {
+    setEnabledButtons(false);
 }

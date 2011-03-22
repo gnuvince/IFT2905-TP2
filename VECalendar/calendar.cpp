@@ -15,7 +15,6 @@ Calendar::Calendar(QObject *parent) :
 
 void Calendar::add_event(CalendarEvent *ce) {
     events->append(ce);
-    emit event_added(ce->date);
 }
 
 CalendarEvent* Calendar::get_event(const QModelIndex &index) const {
@@ -76,6 +75,61 @@ QVariant Calendar::headerData(int section, Qt::Orientation orientation, int role
         }
     }
     return QVariant();
+}
+
+
+bool Calendar::removeRows(int row, int count, const QModelIndex &parent) {
+    Q_UNUSED(parent);
+
+    beginRemoveRows(QModelIndex(), row, row+count-1);
+    for (int i = row; i < row+count; ++i)
+        remove_event(i);
+    endRemoveRows();
+    return true;
+}
+
+bool Calendar::insertRows(int row, int count, const QModelIndex &parent) {
+
+    Q_UNUSED(parent);
+
+    beginInsertRows(QModelIndex(), row, row+count-1);
+    for (int i = row; i < row+count; ++i) {
+        CalendarEvent *ce = new CalendarEvent(QString(), QDate(), QTime(), QTime(), QString());
+        add_event(ce);
+    }
+    endInsertRows();
+    return true;
+}
+
+bool Calendar::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if (index.isValid() && role == Qt::EditRole) {
+         CalendarEvent *ce = get_event(index);
+
+         switch (index.column()) {
+         case TITLE_INDEX:
+             ce->title = value.toString();
+             break;
+         case DATE_INDEX:
+             ce->date = value.toDate();
+             emit event_added(ce->date);
+             break;
+         case START_TIME_INDEX:
+             ce->start_time = value.toTime();
+             break;
+         case END_TIME_INDEX:
+             ce->end_time = value.toTime();
+             break;
+         case DESCRIPTION_INDEX:
+             ce->description = value.toString();
+             break;
+         default: ;
+         }
+
+         emit(dataChanged(index, index));
+
+         return true;
+     }
+     return false;
 }
 
 
