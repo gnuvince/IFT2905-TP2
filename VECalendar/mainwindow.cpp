@@ -38,21 +38,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->viewButton, SIGNAL(clicked()), this, SLOT(ToggleView()));
     connect(this, SIGNAL(selectView(int)), ui->leftPane, SLOT(setCurrentIndex(int)));
     connect(this, SIGNAL(selectView(int)), this, SLOT(setViewButtonText(int)));
-    connect(this, SIGNAL(dateSelected(QString)), ui->selectedDate, SLOT(setText(QString)));
+    connect(this, SIGNAL(dateSelected(QDate)), this, SLOT(setDateLabelsText(QDate)));
+    connect(this, SIGNAL(dateSelected(QDate)), AMDialog, SLOT(setDate(QDate)));
     connect(this, SIGNAL(createEvent()), AMDialog, SLOT(exec()));
     connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
     connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
     connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
     connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
     connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(setDateLabel(QModelIndex)));
-    connect(calendar, SIGNAL(event_added(const QDate&)), this, SLOT(highlight_date(const QDate&)));
-    connect(calendar, SIGNAL(event_added(const QDate&)), dayProxy, SLOT(invalidate()));
-    connect(calendar, SIGNAL(event_added(const QDate&)), listProxy, SLOT(invalidate()));
+    connect(calendar, SIGNAL(date_modified(const QDate&)), this, SLOT(highlight_date(const QDate&)));
+    connect(calendar, SIGNAL(date_modified(const QDate&)), dayProxy, SLOT(invalidate()));
+    connect(calendar, SIGNAL(date_modified(const QDate&)), listProxy, SLOT(invalidate()));
     connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(enableButtons()));
     connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(disableButtons()));
     connect(ui->delEventButton, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
     connect(ui->delEventButtonList, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
-    connect(ui->calendarWidget, SIGNAL(clicked(QDate)), AMDialog, SLOT(setDate(QDate)));dateA
 
 
     dateActivated();
@@ -73,9 +73,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::highlight_date(const QDate& date) {
     QTextCharFormat fmt;
-    fmt.setFontWeight(QFont::Bold);
-    fmt.setForeground(Qt::white);
-    fmt.setBackground(QColor(0xEB, 0x6E, 0x10));
+
+    if (calendar->countForDate(date) > 0) {
+        fmt.setFontWeight(QFont::Bold);
+        fmt.setForeground(Qt::white);
+        fmt.setBackground(QColor(0xEB, 0x6E, 0x10));
+    }
     ui->calendarWidget->setDateTextFormat(date, fmt);
 }
 
@@ -126,8 +129,7 @@ void MainWindow::modifyEventRequest() {
 void MainWindow::dateActivated()
 {
     activeDate = ui->calendarWidget->selectedDate();
-    QString str = activeDate.toString("dd MMMM yyyy");
-    emit dateSelected(str);
+    emit dateSelected(activeDate);
 }
 
 void MainWindow::setViewButtonText(int view) {
@@ -168,4 +170,9 @@ void MainWindow::enableButtons() {
 
 void MainWindow::disableButtons() {
     setEnabledButtons(false);
+}
+
+void MainWindow::setDateLabelsText(QDate date) {
+    AMDialog->setDate(date);
+    ui->selectedDate->setText(date.toString("dd MMMM yyyy"));
 }

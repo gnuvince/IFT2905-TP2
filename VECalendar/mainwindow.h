@@ -38,9 +38,10 @@ public slots:
     void setDateLabel(QModelIndex index);
     void disableButtons();
     void enableButtons();
+    void setDateLabelsText(QDate date);
 
 signals:
-    void dateSelected(QString date);
+    void dateSelected(QDate date);
     void createEvent();
     void selectView(int view);
     void dataModelChanged();

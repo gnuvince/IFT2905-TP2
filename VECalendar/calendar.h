@@ -28,6 +28,7 @@ public:
     CalendarEvent* get_event(const QModelIndex &index) const;
     int count();
     QString get_description(const QModelIndex &index) const;
+    int countForDate(const QDate &date);
 
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex &parent) const;
@@ -37,8 +38,9 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent);
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
+
 signals:
-    void event_added(const QDate &date);
+    void date_modified(const QDate &date);
 
 public slots:
 
