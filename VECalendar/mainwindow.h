@@ -41,7 +41,7 @@ public slots:
 
 signals:
     void dateSelected(QString date);
-    void createEvent(CalendarEvent *event);
+    void createEvent();
     void selectView(int view);
     void dataModelChanged();
 

@@ -15,7 +15,6 @@ Calendar::Calendar(QObject *parent) :
 
 void Calendar::add_event(CalendarEvent *ce) {
     events->append(ce);
-    emit event_added(ce->date);
 }
 
 CalendarEvent* Calendar::get_event(const QModelIndex &index) const {
@@ -112,6 +111,7 @@ bool Calendar::setData(const QModelIndex &index, const QVariant &value, int role
              break;
          case DATE_INDEX:
              ce->date = value.toDate();
+             emit event_added(ce->date);
              break;
          case START_TIME_INDEX:
              ce->start_time = value.toTime();
