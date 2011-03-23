@@ -16,6 +16,7 @@ AddModDialog::AddModDialog(Calendar *calendarModel, CalendarEvent *event, QWidge
     ui(new Ui::AddModDialog)
 {
     ui->setupUi(this);
+    this->setWindowTitle(event == 0 ? trUtf8("Ajouter un événement") : trUtf8("Modifier un événement"));
 
     connect(this, SIGNAL(titleSelected(QString)), ui->eventTitle, SLOT(setText(QString)));
     connect(this, SIGNAL(dateSelected(QDate)), ui->eventDate, SLOT(setDate(QDate)));
