@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(disableButtons()));
     connect(ui->delEventButton, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
     connect(ui->delEventButtonList, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
-    connect(ui->calendarWidget, SIGNAL(clicked(QDate)), AMDialog, SLOT(setDate(QDate)));dateA
+    connect(ui->calendarWidget, SIGNAL(clicked(QDate)), AMDialog, SLOT(setDate(QDate)));
 
 
     dateActivated();
