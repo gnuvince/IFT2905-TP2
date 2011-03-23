@@ -32,9 +32,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     settings = new QSettings("VECalendar", "diro");
     backgroundColor = settings->value("backgroundColor", DEFAULT_COLOR).value<QColor>();
-
-
     calendar = new Calendar(this);
+    QString filename = settings->value("filename", "").value<QString>();
+    loadCalendar(filename);
+
+
     dayProxy = new DayEventFilterProxy(this);
     dayProxy->setDynamicSortFilter(true);
     dayProxy->setSourceModel(calendar);
@@ -70,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->viewButton, SIGNAL(clicked()), this, SLOT(ToggleView()));
 
     // Menu actions
-    connect(ui->actionQuitter, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->actionQuitter, SIGNAL(triggered()), this, SLOT(shutdown()));
     connect(ui->actionSauvegarder_calendrier, SIGNAL(triggered()), this, SLOT(saveCalendar()));
     connect(ui->actionOuvrir_calendrier, SIGNAL(triggered()), this, SLOT(loadCalendar()));
     connect(ui->actionCouleur, SIGNAL(triggered()), this, SLOT(setColor()));
@@ -230,16 +232,10 @@ void MainWindow::disableListButtons() {
     }
 }
 
+
 void MainWindow::saveCalendar() {
     QString filename = QFileDialog::getSaveFileName();
-    if (filename.isEmpty()) {
-        return;
-    }
-    QFile f(filename);
-    if (f.open(QIODevice::WriteOnly)) {
-        QDataStream s(&f);
-        s << *calendar;
-        f.close();
+    if (loadCalendar(filename)) {
         QMessageBox::warning(this, trUtf8("Sauvegarde réussie"), trUtf8("La sauvegarde du calendrier a réussi."));
     }
     else {
@@ -247,22 +243,48 @@ void MainWindow::saveCalendar() {
     }
 }
 
+bool MainWindow::saveCalendar(QString filename) {
+    if (filename.isEmpty()) {
+        return false;
+    }
+    settings->setValue("filename", filename);
+    QFile f(filename);
+    if (f.open(QIODevice::WriteOnly)) {
+        QDataStream s(&f);
+        s << *calendar;
+        f.close();
+        return true;
+    }
+    return false;
+}
+
 
 void MainWindow::loadCalendar() {
     QString filename = QFileDialog::getOpenFileName();
-    if (filename.isEmpty()) {
-        return;
+    if (loadCalendar(filename)) {
+        QMessageBox::warning(this, trUtf8("Ouverture réussie"), trUtf8("L'ouverture du calendrier a réussi."));
     }
+    else {
+        QMessageBox::warning(this, trUtf8("Ouverture échouée"), trUtf8("L'ouverture' du calendrier a échouée."));
+    }
+}
+
+bool MainWindow::loadCalendar(QString filename) {
+    if (filename.isEmpty()) {
+        return false;
+    }
+
     QFile f(filename);
     if (f.open(QIODevice::ReadOnly)) {
         QDataStream s(&f);
         s >> *calendar;
         f.close();
-        QMessageBox::warning(this, trUtf8("Ouverture réussie"), trUtf8("L'ouverture du calendrier a réussi."));
+        foreach (CalendarEvent *ce, calendar->getEvents()) {
+            emit highlight_date(ce->date);
+        }
+        return true;
     }
-    else {
-        QMessageBox::warning(this, trUtf8("Ouvertureéchouée"), trUtf8("L'ouverture' du calendrier a échouée."));
-    }
+    return false;
 }
 
 void MainWindow::setColor() {
@@ -275,4 +297,11 @@ void MainWindow::setColor() {
    foreach (CalendarEvent *ce, calendar->getEvents()) {
        emit highlight_date(ce->date);
    }
+}
+
+
+void MainWindow::shutdown() {
+    QString filename = settings->value("filename", "").value<QString>();
+    saveCalendar(filename);
+    close();
 }

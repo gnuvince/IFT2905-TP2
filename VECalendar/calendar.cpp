@@ -161,7 +161,6 @@ QDataStream& operator>>(QDataStream &s, Calendar &c) {
         CalendarEvent *ce = new CalendarEvent;
         s >> *ce;
         c.events->append(ce);
-        emit c.loadedEvent(ce->date);
     }
     c.endResetModel();
     return s;

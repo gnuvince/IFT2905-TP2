@@ -46,6 +46,7 @@ public slots:
     void saveCalendar();
     void loadCalendar();
     void setColor();
+    void shutdown();
 
 signals:
     void dateSelected(QDate date);
@@ -72,6 +73,10 @@ private:
     void setEnabledButtons(int view, bool b);
     QColor backgroundColor;
     QSettings *settings;
+    bool loadCalendar(QString filename);
+    bool saveCalendar(QString filename);
+
+
 };
 
 #endif // MAINWINDOW_H
