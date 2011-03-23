@@ -39,6 +39,7 @@ public slots:
     void disableButtons();
     void enableButtons();
     void setDateLabelsText(QDate date);
+    void disableListButtons();
 
 signals:
     void dateSelected(QDate date);
@@ -50,7 +51,7 @@ private:
     static int CALENDAR_VIEW;
     static int FILTER_VIEW;
     Ui::MainWindow *ui;
-    AddModDialog *AMDialog;
+    //AddModDialog *AMDialog;
     QStackedLayout *stackedLayout;
     QHBoxLayout *hBoxLayout;
     QWidget *pane1Widget;
@@ -61,7 +62,7 @@ private:
     DayEventFilterProxy *dayProxy;
     EventListProxy *listProxy;
 
-    void setEnabledButtons(bool b);
+    void setEnabledButtons(int view, bool b);
 };
 
 #endif // MAINWINDOW_H

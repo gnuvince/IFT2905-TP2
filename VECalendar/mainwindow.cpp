@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     calendar = new Calendar(this);
-    AMDialog = new AddModDialog(calendar, this);
     dayProxy = new DayEventFilterProxy(this);
     dayProxy->setDynamicSortFilter(true);
     dayProxy->setSourceModel(calendar);
@@ -33,30 +32,34 @@ MainWindow::MainWindow(QWidget *parent) :
     listProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     listProxy->setSourceModel(calendar);
 
-    connect(ui->addEventButton, SIGNAL(clicked()), this, SLOT(addEventRequest()));
-    connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(dateActivated()));
-    connect(ui->viewButton, SIGNAL(clicked()), this, SLOT(ToggleView()));
-    connect(this, SIGNAL(selectView(int)), ui->leftPane, SLOT(setCurrentIndex(int)));
-    connect(this, SIGNAL(selectView(int)), this, SLOT(setViewButtonText(int)));
     connect(this, SIGNAL(dateSelected(QDate)), this, SLOT(setDateLabelsText(QDate)));
-    connect(this, SIGNAL(dateSelected(QDate)), AMDialog, SLOT(setDate(QDate)));
-    connect(this, SIGNAL(createEvent()), AMDialog, SLOT(exec()));
-    connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
-    connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
-    connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
-    connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
-    connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(setDateLabel(QModelIndex)));
-    connect(calendar, SIGNAL(date_modified(const QDate&)), this, SLOT(highlight_date(const QDate&)));
+    connect(this, SIGNAL(selectView(int)), this, SLOT(setViewButtonText(int)));
+    connect(this, SIGNAL(selectView(int)), ui->leftPane, SLOT(setCurrentIndex(int)));
     connect(calendar, SIGNAL(date_modified(const QDate&)), dayProxy, SLOT(invalidate()));
     connect(calendar, SIGNAL(date_modified(const QDate&)), listProxy, SLOT(invalidate()));
-    connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(enableButtons()));
+    connect(calendar, SIGNAL(date_modified(const QDate&)), this, SLOT(highlight_date(const QDate&)));
+    connect(ui->addEventButton, SIGNAL(clicked()), this, SLOT(addEventRequest()));
+    connect(ui->addEventButtonList, SIGNAL(clicked()), this, SLOT(addEventRequest()));
+    connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
+    connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(dateActivated()));
     connect(ui->calendarWidget, SIGNAL(selectionChanged()), this, SLOT(disableButtons()));
+    connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(setDateLabel(QModelIndex)));
+    connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
+    connect(ui->dayEventsLong, SIGNAL(clicked(QModelIndex)), this, SLOT(enableButtons()));
+    connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(enableButtons()));
+    connect(ui->dayEventsShort, SIGNAL(clicked(QModelIndex)), this, SLOT(viewEvent(QModelIndex)));
     connect(ui->delEventButton, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
     connect(ui->delEventButtonList, SIGNAL(clicked()), this, SLOT(deleteEventRequest()));
+    connect(ui->filterString, SIGNAL(textChanged(QString)), listProxy, SLOT(setFilterFixedString(QString)));
+    connect(ui->filterString, SIGNAL(textChanged(QString)), this, SLOT(disableListButtons()));
+    connect(ui->modEventButton, SIGNAL(clicked()), this, SLOT(modifyEventRequest()));
+    connect(ui->modEventButtonList, SIGNAL(clicked()), this, SLOT(modifyEventRequest()));
+    connect(ui->viewButton, SIGNAL(clicked()), this, SLOT(ToggleView()));
 
 
     dateActivated();
-    setEnabledButtons(false);
+    setEnabledButtons(CALENDAR_VIEW, false);
+    setEnabledButtons(FILTER_VIEW, false);
     emit selectView(0);
 
 
@@ -90,7 +93,9 @@ void MainWindow::ToggleView()
 
 void MainWindow::addEventRequest()
 {
-    emit createEvent();
+    AddModDialog AMDialog(calendar, this);
+    AMDialog.setDate(ui->calendarWidget->selectedDate());
+    AMDialog.exec();
 }
 
 
@@ -113,6 +118,7 @@ void MainWindow::deleteEventRequest() {
         proxy = listProxy;
     }
 
+
     QModelIndex index = view->currentIndex();
     QModelIndex index2 = proxy->mapToSource(index);
     int row = index2.row();
@@ -122,7 +128,24 @@ void MainWindow::deleteEventRequest() {
 }
 
 void MainWindow::modifyEventRequest() {
+    AddModDialog AMDialog(calendar, this);
+    CalendarEvent *ce;
 
+    if (activeView == CALENDAR_VIEW) {
+        QModelIndex index = ui->dayEventsShort->currentIndex();
+        QModelIndex index2 = dayProxy->mapToSource(index);
+        ce = calendar->get_event(index2);
+    }
+    else {
+        QModelIndex index = ui->dayEventsLong->currentIndex();
+        QModelIndex index2 = listProxy->mapToSource(index);
+        ce = calendar->get_event(index2);
+    }
+
+    AMDialog.setInformation(ce);
+    AMDialog.setModify(true);
+    AMDialog.setCalendarEvent(ce);
+    AMDialog.exec();
 }
 
 
@@ -158,21 +181,33 @@ void MainWindow::setDateLabel(QModelIndex index) {
     ui->list_date_label->setText(date.toString("dd MMMM yyyy"));
 }
 
-void MainWindow::setEnabledButtons(bool b) {
-    ui->delEventButton->setEnabled(b);
-    ui->modEventButton->setEnabled(b);
+void MainWindow::setEnabledButtons(int view, bool b) {
+    if (view == CALENDAR_VIEW) {
+        ui->delEventButton->setEnabled(b);
+        ui->modEventButton->setEnabled(b);
+    }
+    else {
+        ui->delEventButtonList->setEnabled(b);
+        ui->modEventButtonList->setEnabled(b);
+    }
 }
 
 void MainWindow::enableButtons() {
-    setEnabledButtons(true);
+    setEnabledButtons(activeView, true);
 }
 
 
 void MainWindow::disableButtons() {
-    setEnabledButtons(false);
+    setEnabledButtons(activeView, false);
 }
 
 void MainWindow::setDateLabelsText(QDate date) {
-    AMDialog->setDate(date);
     ui->selectedDate->setText(date.toString("dd MMMM yyyy"));
+}
+
+
+void MainWindow::disableListButtons() {
+    if (ui->dayEventsLong->currentIndex().internalPointer() == 0) {
+        disableButtons();
+    }
 }

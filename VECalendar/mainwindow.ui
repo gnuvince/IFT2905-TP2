@@ -246,7 +246,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="addEventButton_2">
+               <widget class="QPushButton" name="addEventButtonList">
                 <property name="text">
                  <string>Ajouter</string>
                 </property>
@@ -364,7 +364,7 @@
      <x>0</x>
      <y>0</y>
      <width>928</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalendrier">
