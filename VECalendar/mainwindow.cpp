@@ -4,6 +4,8 @@
 #include <QLocale>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QColorDialog>
+#include <QColor>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -25,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     francais(QLocale::French, QLocale::Canada)
 {
     ui->setupUi(this);
+    backgroundColor = QColor(0xEB, 0x6E, 0x10);
 
     calendar = new Calendar(this);
     dayProxy = new DayEventFilterProxy(this);
@@ -65,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionQuitter, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionSauvegarder_calendrier, SIGNAL(triggered()), this, SLOT(saveCalendar()));
     connect(ui->actionOuvrir_calendrier, SIGNAL(triggered()), this, SLOT(loadCalendar()));
+    connect(ui->actionCouleur, SIGNAL(triggered()), this, SLOT(setColor()));
 
 
     dateActivated();
@@ -90,7 +94,8 @@ void MainWindow::highlight_date(const QDate& date) {
     if (calendar->countForDate(date) > 0) {
         fmt.setFontWeight(QFont::Bold);
         fmt.setForeground(Qt::white);
-        fmt.setBackground(QColor(0xEB, 0x6E, 0x10));
+        //fmt.setBackground(QColor(0xEB, 0x6E, 0x10));
+        fmt.setBackground(backgroundColor);
     }
     ui->calendarWidget->setDateTextFormat(date, fmt);
 }
@@ -248,4 +253,11 @@ void MainWindow::loadCalendar() {
     else {
         QMessageBox::warning(this, trUtf8("Ouvertureéchouée"), trUtf8("L'ouverture' du calendrier a échouée."));
     }
+}
+
+void MainWindow::setColor() {
+   backgroundColor = QColorDialog::getColor();
+   foreach (CalendarEvent *ce, calendar->getEvents()) {
+       emit highlight_date(ce->date);
+   }
 }

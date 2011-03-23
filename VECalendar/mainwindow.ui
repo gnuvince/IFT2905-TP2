@@ -383,7 +383,14 @@
     <addaction name="separator"/>
     <addaction name="actionQuitter"/>
    </widget>
+   <widget class="QMenu" name="menuOption">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionCouleur"/>
+   </widget>
    <addaction name="menuFichier"/>
+   <addaction name="menuOption"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOuvrir_calendrier">
@@ -399,6 +406,11 @@
   <action name="actionQuitter">
    <property name="text">
     <string>Quitter</string>
+   </property>
+  </action>
+  <action name="actionCouleur">
+   <property name="text">
+    <string>Couleur...</string>
    </property>
   </action>
  </widget>

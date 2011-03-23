@@ -29,6 +29,11 @@ int Calendar::count() {
     return events->count();
 }
 
+
+QList<CalendarEvent *>& Calendar::getEvents() {
+    return *events;
+}
+
 int Calendar::countForDate(const QDate &date) {
     int n = 0;
     for (int i = 0; i < events->count(); ++i) {

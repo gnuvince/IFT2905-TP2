@@ -8,6 +8,7 @@
 #include <QHBoxLayout>
 #include <QModelIndex>
 #include <QLocale>
+#include <QColor>
 
 #include "addmoddialog.h"
 #include "calendar.h"
@@ -43,6 +44,7 @@ public slots:
     void disableListButtons();
     void saveCalendar();
     void loadCalendar();
+    void setColor();
 
 signals:
     void dateSelected(QDate date);
@@ -67,6 +69,7 @@ private:
     EventListProxy *listProxy;
     QLocale francais;
     void setEnabledButtons(int view, bool b);
+    QColor backgroundColor;
 };
 
 #endif // MAINWINDOW_H

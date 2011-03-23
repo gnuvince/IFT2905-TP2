@@ -29,6 +29,7 @@ public:
     int count();
     QString get_description(const QModelIndex &index) const;
     int countForDate(const QDate &date);
+    QList<CalendarEvent *>& getEvents();
 
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex &parent) const;
