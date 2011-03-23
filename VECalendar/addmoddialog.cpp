@@ -12,6 +12,7 @@
 AddModDialog::AddModDialog(Calendar *calendarModel, QWidget *parent) :
     QDialog(parent),
     calendar(calendarModel),
+    modify(false),
     ui(new Ui::AddModDialog)
 {
     ui->setupUi(this);
@@ -21,7 +22,7 @@ AddModDialog::AddModDialog(Calendar *calendarModel, QWidget *parent) :
     connect(this, SIGNAL(startTimeSelected(QTime)), ui->eventStartTime, SLOT(setTime(QTime)));
     connect(this, SIGNAL(endTimeSelected(QTime)), ui->eventEndTime, SLOT(setTime(QTime)));
     connect(this, SIGNAL(descriptionSelected(QString)), ui->eventDescription, SLOT(setText(QString)));
-    connect(ui->buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(addEvent()));
+    connect(ui->buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(saveEvent()));
 }
 
 AddModDialog::~AddModDialog()
@@ -34,12 +35,21 @@ void AddModDialog::setDate(QDate date) {
 }
 
 
-void AddModDialog::addEvent() {
-    addEvent(ui->eventTitle->text(),
-             ui->eventDate->date(),
-             ui->eventStartTime->time(),
-             ui->eventEndTime->time(),
-             ui->eventDescription->toHtml());
+void AddModDialog::saveEvent() {
+    if (modify) {
+        modifyEvent(ui->eventTitle->text(),
+                    ui->eventDate->date(),
+                    ui->eventStartTime->time(),
+                    ui->eventEndTime->time(),
+                    ui->eventDescription->toPlainText());
+    }
+    else {
+        addEvent(ui->eventTitle->text(),
+                 ui->eventDate->date(),
+                 ui->eventStartTime->time(),
+                 ui->eventEndTime->time(),
+                 ui->eventDescription->toPlainText());
+    }
 }
 
 void AddModDialog::addEvent(QString title, QDate date, QTime start, QTime end, QString description) {
@@ -56,4 +66,32 @@ void AddModDialog::addEvent(QString title, QDate date, QTime start, QTime end, Q
     calendar->setData(index, end);
     index = calendar->index(row, DESCRIPTION_INDEX, QModelIndex());
     calendar->setData(index, description);
+}
+
+
+void AddModDialog::modifyEvent(QString title, QDate date, QTime start, QTime end, QString description) {
+    calendarEvent->title = title;
+    calendarEvent->date = date;
+    calendarEvent->start_time = start;
+    calendarEvent->end_time = end;
+    calendarEvent->description = description;
+}
+
+
+void AddModDialog::setInformation(CalendarEvent *ce) {
+    ui->eventTitle->setText(ce->title);
+    ui->eventDate->setDate(ce->date);
+    ui->eventStartTime->setTime(ce->start_time);
+    ui->eventEndTime->setTime(ce->end_time);
+    ui->eventDescription->setPlainText(ce->description);
+}
+
+
+void AddModDialog::setCalendarEvent(CalendarEvent *ce) {
+    calendarEvent = ce;
+}
+
+
+void AddModDialog::setModify(bool b) {
+    modify = b;
 }

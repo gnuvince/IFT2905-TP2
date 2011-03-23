@@ -29,6 +29,17 @@ int Calendar::count() {
     return events->count();
 }
 
+int Calendar::countForDate(const QDate &date) {
+    int n = 0;
+    for (int i = 0; i < events->count(); ++i) {
+        if (events->at(i)->date == date) {
+            n++;
+        }
+    }
+    return n;
+}
+
+
 QString Calendar::get_description(const QModelIndex &index) const {
     int i = index.row();
     return events->at(i)->description;
@@ -82,8 +93,11 @@ bool Calendar::removeRows(int row, int count, const QModelIndex &parent) {
     Q_UNUSED(parent);
 
     beginRemoveRows(QModelIndex(), row, row+count-1);
-    for (int i = row; i < row+count; ++i)
+    for (int i = row; i < row+count; ++i) {
+        CalendarEvent *ce = events->at(i);
         remove_event(i);
+        emit date_modified(ce->date);
+    }
     endRemoveRows();
     return true;
 }
@@ -111,7 +125,7 @@ bool Calendar::setData(const QModelIndex &index, const QVariant &value, int role
              break;
          case DATE_INDEX:
              ce->date = value.toDate();
-             emit event_added(ce->date);
+             emit date_modified(ce->date);
              break;
          case START_TIME_INDEX:
              ce->start_time = value.toTime();

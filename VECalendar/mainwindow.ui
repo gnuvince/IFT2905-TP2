@@ -246,7 +246,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="addEventButton_2">
+               <widget class="QPushButton" name="addEventButtonList">
                 <property name="text">
                  <string>Ajouter</string>
                 </property>
@@ -371,29 +371,36 @@
      <x>0</x>
      <y>0</y>
      <width>928</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuCalendrier">
-    <property name="title">
-     <string>Calendrier</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuEdition">
-    <property name="title">
-     <string>Édition</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuFichier">
     <property name="title">
      <string>Fichier</string>
     </property>
+    <addaction name="actionOuvrir_calendrier"/>
+    <addaction name="actionSauvegarder_calendrier"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuitter"/>
    </widget>
-   <addaction name="menuCalendrier"/>
    <addaction name="menuFichier"/>
-   <addaction name="menuEdition"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOuvrir_calendrier">
+   <property name="text">
+    <string>Ouvrir calendrier...</string>
+   </property>
+  </action>
+  <action name="actionSauvegarder_calendrier">
+   <property name="text">
+    <string>Sauvegarder calendrier...</string>
+   </property>
+  </action>
+  <action name="actionQuitter">
+   <property name="text">
+    <string>Quitter</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

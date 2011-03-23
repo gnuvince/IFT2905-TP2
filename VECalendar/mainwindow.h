@@ -39,9 +39,11 @@ public slots:
     void setDateLabel(QModelIndex index);
     void disableButtons();
     void enableButtons();
+    void setDateLabelsText(QDate date);
+    void disableListButtons();
 
 signals:
-    void dateSelected(QString date);
+    void dateSelected(QDate date);
     void createEvent();
     void selectView(int view);
     void dataModelChanged();
@@ -50,7 +52,7 @@ private:
     static int CALENDAR_VIEW;
     static int FILTER_VIEW;
     Ui::MainWindow *ui;
-    AddModDialog *AMDialog;
+    //AddModDialog *AMDialog;
     QStackedLayout *stackedLayout;
     QHBoxLayout *hBoxLayout;
     QWidget *pane1Widget;
@@ -61,7 +63,7 @@ private:
     DayEventFilterProxy *dayProxy;
     EventListProxy *listProxy;
     QLocale francais;
-    void setEnabledButtons(bool b);
+    void setEnabledButtons(int view, bool b);
 };
 
 #endif // MAINWINDOW_H
