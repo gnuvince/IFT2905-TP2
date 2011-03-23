@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->modEventButton, SIGNAL(clicked()), this, SLOT(modifyEventRequest()));
     connect(ui->modEventButtonList, SIGNAL(clicked()), this, SLOT(modifyEventRequest()));
     connect(ui->viewButton, SIGNAL(clicked()), this, SLOT(ToggleView()));
+    connect(ui->actionQuitter, SIGNAL(triggered()), this, SLOT(close()));
 
 
     dateActivated();
