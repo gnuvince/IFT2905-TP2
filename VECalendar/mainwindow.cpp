@@ -232,6 +232,9 @@ void MainWindow::disableListButtons() {
 
 void MainWindow::saveCalendar() {
     QString filename = QFileDialog::getSaveFileName();
+    if (filename.isEmpty()) {
+        return;
+    }
     QFile f(filename);
     if (f.open(QIODevice::WriteOnly)) {
         QDataStream s(&f);
@@ -247,6 +250,9 @@ void MainWindow::saveCalendar() {
 
 void MainWindow::loadCalendar() {
     QString filename = QFileDialog::getOpenFileName();
+    if (filename.isEmpty()) {
+        return;
+    }
     QFile f(filename);
     if (f.open(QIODevice::ReadOnly)) {
         QDataStream s(&f);
