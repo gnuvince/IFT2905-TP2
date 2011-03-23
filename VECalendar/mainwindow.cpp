@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QColorDialog>
 #include <QColor>
+#include <QSettings>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -16,6 +17,7 @@
 
 #include <QDebug>
 
+#define DEFAULT_COLOR QColor(0xEB, 0x6E, 0x10)
 
 int MainWindow::CALENDAR_VIEW = 0;
 int MainWindow::FILTER_VIEW = 1;
@@ -27,7 +29,10 @@ MainWindow::MainWindow(QWidget *parent) :
     francais(QLocale::French, QLocale::Canada)
 {
     ui->setupUi(this);
-    backgroundColor = QColor(0xEB, 0x6E, 0x10);
+
+    settings = new QSettings("VECalendar", "diro");
+    backgroundColor = settings->value("backgroundColor", DEFAULT_COLOR).value<QColor>();
+
 
     calendar = new Calendar(this);
     dayProxy = new DayEventFilterProxy(this);
@@ -94,7 +99,6 @@ void MainWindow::highlight_date(const QDate& date) {
     if (calendar->countForDate(date) > 0) {
         fmt.setFontWeight(QFont::Bold);
         fmt.setForeground(Qt::white);
-        //fmt.setBackground(QColor(0xEB, 0x6E, 0x10));
         fmt.setBackground(backgroundColor);
     }
     ui->calendarWidget->setDateTextFormat(date, fmt);
@@ -256,7 +260,12 @@ void MainWindow::loadCalendar() {
 }
 
 void MainWindow::setColor() {
-   backgroundColor = QColorDialog::getColor();
+   QColor newColor = QColorDialog::getColor(backgroundColor);
+   if (!newColor.isValid()) {
+       return;
+   }
+   backgroundColor = newColor;
+   settings->setValue("backgroundColor", backgroundColor);
    foreach (CalendarEvent *ce, calendar->getEvents()) {
        emit highlight_date(ce->date);
    }

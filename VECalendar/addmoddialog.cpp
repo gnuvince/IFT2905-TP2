@@ -1,13 +1,15 @@
-#include "addmoddialog.h"
-#include "ui_addmoddialog.h"
-#include "calendar.h"
-#include "calendarevent.h"
-
 #include <QDate>
 #include <QModelIndex>
 #include <QDebug>
 #include <QDialogButtonBox>
 #include <QPushButton>
+
+#include "addmoddialog.h"
+#include "ui_addmoddialog.h"
+#include "calendar.h"
+#include "calendarevent.h"
+
+
 
 AddModDialog::AddModDialog(Calendar *calendarModel, CalendarEvent *event, QWidget *parent) :
     QDialog(parent),

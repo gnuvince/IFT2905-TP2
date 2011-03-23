@@ -9,6 +9,7 @@
 #include <QModelIndex>
 #include <QLocale>
 #include <QColor>
+#include <QSettings>
 
 #include "addmoddialog.h"
 #include "calendar.h"
@@ -70,6 +71,7 @@ private:
     QLocale francais;
     void setEnabledButtons(int view, bool b);
     QColor backgroundColor;
+    QSettings *settings;
 };
 
 #endif // MAINWINDOW_H
