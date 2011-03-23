@@ -41,12 +41,15 @@ public slots:
     void enableButtons();
     void setDateLabelsText(QDate date);
     void disableListButtons();
+    void saveCalendar();
+    void loadCalendar();
 
 signals:
     void dateSelected(QDate date);
     void createEvent();
     void selectView(int view);
     void dataModelChanged();
+
 
 private:
     static int CALENDAR_VIEW;

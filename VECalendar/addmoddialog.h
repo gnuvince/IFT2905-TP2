@@ -15,14 +15,12 @@ class AddModDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddModDialog(Calendar *calendarModel, QWidget *parent = 0);
+    explicit AddModDialog(Calendar *calendarModel, CalendarEvent *event = 0, QWidget *parent = 0);
     ~AddModDialog();
-    void setCalendarEvent(CalendarEvent *ce);
-    void setModify(bool b);
 
 public slots:
     void setDate(QDate date);
-    void setInformation(CalendarEvent *ce);
+    void displayInformation(CalendarEvent *ce);
     void saveEvent();
     void addEvent(QString title, QDate date, QTime start, QTime end, QString description);
     void modifyEvent(QString title, QDate date, QTime start, QTime end, QString description);
@@ -40,7 +38,6 @@ private:
     Ui::AddModDialog *ui;
     Calendar *calendar;
     CalendarEvent *calendarEvent;
-    bool modify;
 };
 
 #endif // ADDMODDIALOG_H

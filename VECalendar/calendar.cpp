@@ -148,13 +148,17 @@ bool Calendar::setData(const QModelIndex &index, const QVariant &value, int role
 
 
 QDataStream& operator>>(QDataStream &s, Calendar &c) {
+    c.beginResetModel();
+    c.events->clear();
     quint32 count;
     s >> count;
     for (quint32 i = 0; i < count; ++i) {
         CalendarEvent *ce = new CalendarEvent;
         s >> *ce;
         c.events->append(ce);
+        emit c.loadedEvent(ce->date);
     }
+    c.endResetModel();
     return s;
 }
 

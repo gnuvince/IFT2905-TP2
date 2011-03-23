@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QLocale>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -41,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(calendar, SIGNAL(date_modified(const QDate&)), dayProxy, SLOT(invalidate()));
     connect(calendar, SIGNAL(date_modified(const QDate&)), listProxy, SLOT(invalidate()));
     connect(calendar, SIGNAL(date_modified(const QDate&)), this, SLOT(highlight_date(const QDate&)));
+    connect(calendar, SIGNAL(loadedEvent(QDate)), this, SLOT(highlight_date(QDate)));
     connect(ui->addEventButton, SIGNAL(clicked()), this, SLOT(addEventRequest()));
     connect(ui->addEventButtonList, SIGNAL(clicked()), this, SLOT(addEventRequest()));
     connect(ui->calendarWidget, SIGNAL(clicked(QDate)), dayProxy, SLOT(setFilterDate(QDate)));
@@ -58,7 +60,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->modEventButton, SIGNAL(clicked()), this, SLOT(modifyEventRequest()));
     connect(ui->modEventButtonList, SIGNAL(clicked()), this, SLOT(modifyEventRequest()));
     connect(ui->viewButton, SIGNAL(clicked()), this, SLOT(ToggleView()));
+
+    // Menu actions
     connect(ui->actionQuitter, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->actionSauvegarder_calendrier, SIGNAL(triggered()), this, SLOT(saveCalendar()));
+    connect(ui->actionOuvrir_calendrier, SIGNAL(triggered()), this, SLOT(loadCalendar()));
 
 
     dateActivated();
@@ -97,7 +103,7 @@ void MainWindow::ToggleView()
 
 void MainWindow::addEventRequest()
 {
-    AddModDialog AMDialog(calendar, this);
+    AddModDialog AMDialog(calendar, 0, this);
     AMDialog.setDate(ui->calendarWidget->selectedDate());
     AMDialog.exec();
 }
@@ -132,7 +138,6 @@ void MainWindow::deleteEventRequest() {
 }
 
 void MainWindow::modifyEventRequest() {
-    AddModDialog AMDialog(calendar, this);
     CalendarEvent *ce;
 
     if (activeView == CALENDAR_VIEW) {
@@ -145,10 +150,8 @@ void MainWindow::modifyEventRequest() {
         QModelIndex index2 = listProxy->mapToSource(index);
         ce = calendar->get_event(index2);
     }
-
-    AMDialog.setInformation(ce);
-    AMDialog.setModify(true);
-    AMDialog.setCalendarEvent(ce);
+    AddModDialog AMDialog(calendar, ce, this);
+    AMDialog.displayInformation(ce);
     AMDialog.exec();
 }
 
@@ -215,5 +218,34 @@ void MainWindow::setDateLabelsText(QDate date) {
 void MainWindow::disableListButtons() {
     if (ui->dayEventsLong->currentIndex().internalPointer() == 0) {
         disableButtons();
+    }
+}
+
+void MainWindow::saveCalendar() {
+    QString filename = QFileDialog::getSaveFileName();
+    QFile f(filename);
+    if (f.open(QIODevice::WriteOnly)) {
+        QDataStream s(&f);
+        s << *calendar;
+        f.close();
+        QMessageBox::warning(this, trUtf8("Sauvegarde réussie"), trUtf8("La sauvegarde du calendrier a réussi."));
+    }
+    else {
+        QMessageBox::warning(this, trUtf8("Sauvegarde échouée"), trUtf8("La sauvegarde du calendrier a échouée."));
+    }
+}
+
+
+void MainWindow::loadCalendar() {
+    QString filename = QFileDialog::getOpenFileName();
+    QFile f(filename);
+    if (f.open(QIODevice::ReadOnly)) {
+        QDataStream s(&f);
+        s >> *calendar;
+        f.close();
+        QMessageBox::warning(this, trUtf8("Ouverture réussie"), trUtf8("L'ouverture du calendrier a réussi."));
+    }
+    else {
+        QMessageBox::warning(this, trUtf8("Ouvertureéchouée"), trUtf8("L'ouverture' du calendrier a échouée."));
     }
 }

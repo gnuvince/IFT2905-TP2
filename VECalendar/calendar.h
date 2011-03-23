@@ -41,6 +41,8 @@ public:
 
 signals:
     void date_modified(const QDate &date);
+    void loadedEvent(QDate date);
+
 
 public slots:
 

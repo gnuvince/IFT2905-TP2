@@ -9,10 +9,10 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-AddModDialog::AddModDialog(Calendar *calendarModel, QWidget *parent) :
+AddModDialog::AddModDialog(Calendar *calendarModel, CalendarEvent *event, QWidget *parent) :
     QDialog(parent),
+    calendarEvent(event),
     calendar(calendarModel),
-    modify(false),
     ui(new Ui::AddModDialog)
 {
     ui->setupUi(this);
@@ -36,7 +36,7 @@ void AddModDialog::setDate(QDate date) {
 
 
 void AddModDialog::saveEvent() {
-    if (modify) {
+    if (calendarEvent != 0) { // calendarEvent is not null
         modifyEvent(ui->eventTitle->text(),
                     ui->eventDate->date(),
                     ui->eventStartTime->time(),
@@ -78,7 +78,7 @@ void AddModDialog::modifyEvent(QString title, QDate date, QTime start, QTime end
 }
 
 
-void AddModDialog::setInformation(CalendarEvent *ce) {
+void AddModDialog::displayInformation(CalendarEvent *ce) {
     ui->eventTitle->setText(ce->title);
     ui->eventDate->setDate(ce->date);
     ui->eventStartTime->setTime(ce->start_time);
@@ -87,11 +87,3 @@ void AddModDialog::setInformation(CalendarEvent *ce) {
 }
 
 
-void AddModDialog::setCalendarEvent(CalendarEvent *ce) {
-    calendarEvent = ce;
-}
-
-
-void AddModDialog::setModify(bool b) {
-    modify = b;
-}
