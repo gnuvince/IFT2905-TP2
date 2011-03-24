@@ -1,0 +1,65 @@
+Auteurs
+=======
+Vincent Foley-Bourgon (FOLV08078309)
+Eric Thivierge (THIE09016601)
+
+
+Compilation
+===========
+$ cd VECalendar/
+$ qmake -project
+$ qmake
+$ make
+
+Exécution
+=========
+$ cd VECalendar/
+$ ./VECalendar
+
+
+Design général
+==============
+                        CalendarEvent [QObject]
+                                  |
+                                  |
+                                  |
+                                  |
+                        QList<CalendarEvent *>
+                                  |
+                                  |
+                                  |
+                                  |
+                           Calendar [Model]
+                                  |
+                               --------
+                        ------/        \---------
+                 ------/                         \---------
+                /                                          \
+DayEventFilterProxy [Proxy]                       EventListProxy [Proxy]
+             |                                                 |
+             |                                                 |
+             |                                                 |
+             |                                                 |
+             |                                                 |
+dayEventsShort [TableView]                        dayEventsLong [TableView]
+
+
+
+Notes
+=====
+
+* L'utilisateur peut changer la couleur avec laquelle sont mis en
+  surbrillance les journées avec des événements. Ce paramètre est
+  sauvegardé et restauré entre les sessions.
+
+* Par défaut, le calendrier est sauvegardé dans /tmp/vecalendar.dat.
+  Si l'utilisateur fait une sauvegarde dans un autre fichier, ce
+  nouveau fichier est utilisé pour le restant de la session et les
+  sessions suivantes.
+
+* L'utilisateur peut entrer des codes HTML dans la description d'un
+  événement et ces codes seront affichés dans le détail d'un événement
+  (ex.: <b>Allo</b> met la chaîne "Allo" en caractères gras.)
+
+* On peut utiliser le code HTML <img> pour insérer une image se
+  trouvant sur le disque dur: <img src="/path/to/file.jpg">
