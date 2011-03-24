@@ -18,9 +18,12 @@
 #include <QDebug>
 
 #define DEFAULT_COLOR QColor(0xEB, 0x6E, 0x10)
+#define DEFAULT_FILE "/tmp/vecalendar.dat"
 
-int MainWindow::CALENDAR_VIEW = 0;
-int MainWindow::FILTER_VIEW = 1;
+
+// Constants for which view to display
+#define CALENDAR_VIEW 0
+#define FILTER_VIEW 1
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -31,8 +34,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     settings = new QSettings("VECalendar", "diro");
+
+    // Background color of booked days
     backgroundColor = settings->value("backgroundColor", DEFAULT_COLOR).value<QColor>();
     calendar = new Calendar(this);
+
+    // If not filename settings, don't try to load anything
     QString filename = settings->value("filename", "").value<QString>();
     loadCalendar(filename);
 
@@ -78,12 +85,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionCouleur, SIGNAL(triggered()), this, SLOT(setColor()));
 
 
-    dateActivated();
-    setEnabledButtons(CALENDAR_VIEW, false);
-    setEnabledButtons(FILTER_VIEW, false);
+    dateActivated(); // Select today's date (not done by default)
+    setEnabledButtons(CALENDAR_VIEW, false); // disable modify and delete buttons
+    setEnabledButtons(FILTER_VIEW, false); // disable modify and delete buttons
+
     emit selectView(0);
-
-
     activeView = CALENDAR_VIEW;
 
     ui->dayEventsLong->setModel(listProxy);
@@ -98,6 +104,7 @@ MainWindow::~MainWindow()
 void MainWindow::highlight_date(const QDate& date) {
     QTextCharFormat fmt;
 
+    // Highlight only dates which have events.
     if (calendar->countForDate(date) > 0) {
         fmt.setFontWeight(QFont::Bold);
         fmt.setForeground(Qt::white);
@@ -154,12 +161,12 @@ void MainWindow::modifyEventRequest() {
     if (activeView == CALENDAR_VIEW) {
         QModelIndex index = ui->dayEventsShort->currentIndex();
         QModelIndex index2 = dayProxy->mapToSource(index);
-        ce = calendar->get_event(index2);
+        ce = calendar->getEvent(index2.row());
     }
     else {
         QModelIndex index = ui->dayEventsLong->currentIndex();
         QModelIndex index2 = listProxy->mapToSource(index);
-        ce = calendar->get_event(index2);
+        ce = calendar->getEvent(index2.row());
     }
     AddModDialog AMDialog(calendar, ce, this);
     AMDialog.displayInformation(ce);
@@ -175,20 +182,19 @@ void MainWindow::dateActivated()
 
 void MainWindow::setViewButtonText(int view) {
     switch (view) {
-    case 0: ui->viewButton->setText(tr("Liste >>")); break;
-    case 1: ui->viewButton->setText(tr("<< Calendrier")); break;
+    case CALENDAR_VIEW: ui->viewButton->setText(tr("Liste >>")); break;
+    case FILTER_VIEW: ui->viewButton->setText(tr("<< Calendrier")); break;
     default: ;
     }
 }
 
 void MainWindow::viewEvent(QModelIndex index) {
-    //ui->eventDetails->setHtml(calendar->get_description(index));
     QString description;
     if (activeView == CALENDAR_VIEW) {
-        description = dayProxy->get_description(index);
+        description = dayProxy->getDescription(index);
     }
     else {
-        description = listProxy->get_description(index);
+        description = listProxy->getDescription(index);
     }
     ui->eventDetails->setHtml(description);
 }
@@ -301,7 +307,8 @@ void MainWindow::setColor() {
 
 
 void MainWindow::shutdown() {
-    QString filename = settings->value("filename", "").value<QString>();
+    // If no file has been specified so far, save to default file
+    QString filename = settings->value("filename", DEFAULT_FILE).value<QString>();
     saveCalendar(filename);
     close();
 }

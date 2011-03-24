@@ -13,27 +13,32 @@ Calendar::Calendar(QObject *parent) :
     events = new QList<CalendarEvent*>();
 }
 
-void Calendar::add_event(CalendarEvent *ce) {
+// Add a CalendarEvent* to the QList
+void Calendar::addEvent(CalendarEvent *ce) {
     events->append(ce);
 }
 
-CalendarEvent* Calendar::get_event(const QModelIndex &index) const {
-    return events->at(index.row());
+// Return a specific CalendarEvent*
+CalendarEvent* Calendar::getEvent(int i) const {
+    return events->at(i);
 }
 
-void Calendar::remove_event(int i) {
+// Delete a CalendarEvent* from list at index i
+void Calendar::removeEvent(int i) {
     events->removeAt(i);
 }
 
+// Return the number of elements in the QList
 int Calendar::count() {
     return events->count();
 }
 
-
+// Return a reference to the QList
 QList<CalendarEvent *>& Calendar::getEvents() {
     return *events;
 }
 
+// Return the number of CalendarEvent* that have the specified date
 int Calendar::countForDate(const QDate &date) {
     int n = 0;
     for (int i = 0; i < events->count(); ++i) {
@@ -44,8 +49,8 @@ int Calendar::countForDate(const QDate &date) {
     return n;
 }
 
-
-QString Calendar::get_description(const QModelIndex &index) const {
+// Return the description of a CalendarEvent*
+QString Calendar::getDescription(const QModelIndex &index) const {
     int i = index.row();
     return events->at(i)->description;
 }
@@ -100,7 +105,7 @@ bool Calendar::removeRows(int row, int count, const QModelIndex &parent) {
     beginRemoveRows(QModelIndex(), row, row+count-1);
     for (int i = row; i < row+count; ++i) {
         CalendarEvent *ce = events->at(i);
-        remove_event(i);
+        removeEvent(i);
         emit date_modified(ce->date);
     }
     endRemoveRows();
@@ -114,7 +119,7 @@ bool Calendar::insertRows(int row, int count, const QModelIndex &parent) {
     beginInsertRows(QModelIndex(), row, row+count-1);
     for (int i = row; i < row+count; ++i) {
         CalendarEvent *ce = new CalendarEvent(QString(), QDate(), QTime(), QTime(), QString());
-        add_event(ce);
+        addEvent(ce);
     }
     endInsertRows();
     return true;
@@ -122,7 +127,7 @@ bool Calendar::insertRows(int row, int count, const QModelIndex &parent) {
 
 bool Calendar::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
-         CalendarEvent *ce = get_event(index);
+         CalendarEvent *ce = getEvent(index.row());
 
          switch (index.column()) {
          case TITLE_INDEX:

@@ -23,11 +23,11 @@ class Calendar : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit Calendar(QObject *parent = 0);
-    void add_event(CalendarEvent *ce);
-    void remove_event(int i);
-    CalendarEvent* get_event(const QModelIndex &index) const;
+    void addEvent(CalendarEvent *ce);
+    void removeEvent(int i);
+    CalendarEvent* getEvent(int i) const;
     int count();
-    QString get_description(const QModelIndex &index) const;
+    QString getDescription(const QModelIndex &index) const;
     int countForDate(const QDate &date);
     QList<CalendarEvent *>& getEvents();
 

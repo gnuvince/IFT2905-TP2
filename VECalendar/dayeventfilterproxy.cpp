@@ -32,6 +32,6 @@ bool DayEventFilterProxy::filterAcceptsColumn(int source_column, const QModelInd
 }
 
 
-QString DayEventFilterProxy::get_description(const QModelIndex index) const {
-    return (static_cast<Calendar*>(sourceModel()))->get_description(mapToSource(index));
+QString DayEventFilterProxy::getDescription(const QModelIndex index) const {
+    return (static_cast<Calendar*>(sourceModel()))->getDescription(mapToSource(index));
 }

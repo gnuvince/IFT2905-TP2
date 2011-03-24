@@ -17,6 +17,6 @@ bool EventListProxy::filterAcceptsColumn(int source_column, const QModelIndex &s
 }
 
 
-QString EventListProxy::get_description(const QModelIndex index) const {
-    return (static_cast<Calendar*>(sourceModel()))->get_description(mapToSource(index));
+QString EventListProxy::getDescription(const QModelIndex index) const {
+    return (static_cast<Calendar*>(sourceModel()))->getDescription(mapToSource(index));
 }

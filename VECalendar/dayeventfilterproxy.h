@@ -11,7 +11,7 @@ public:
     explicit DayEventFilterProxy(QObject *parent = 0);
     QDate filterDate() const { return day; }
     int columnCount(const QModelIndex &parent) const;
-    QString get_description(const QModelIndex index) const;
+    QString getDescription(const QModelIndex index) const;
 
 
 protected:

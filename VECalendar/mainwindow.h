@@ -56,8 +56,6 @@ signals:
 
 
 private:
-    static int CALENDAR_VIEW;
-    static int FILTER_VIEW;
     Ui::MainWindow *ui;
     //AddModDialog *AMDialog;
     QStackedLayout *stackedLayout;
